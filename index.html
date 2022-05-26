@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Budokai Tenkaichi 3</title>
-</head>
-<body>
+<html>
+    <head>
+        <title>Budokai Tenkaichi -3</title>
+    </head>
+    
     <style type="text/css">
         #world
         {
@@ -17,23 +17,180 @@
         height: 100px;
         width: 100px;
         display: inline-block;
-        background-image: url(img/goku.png);
+        background-image: url('img/goku.png');
         background-size: contain;
         position: absolute;
         background-repeat: no-repeat;
-        }
-    .cell {
+    }
+
+    .cell{
         height: 100px;
         width: 100px;
         display: inline-block;
-        background-image: url(img/minicell.png);
+        background-image: url('img/minicell.png');
+        background-size: contain;
+        position: absolute;
+        background-repeat: no-repeat;
+    }
+    #cuadroDeVidaGoku{
+        height: 60px;
+        width: 250px;
+        display: inline-block;
+        background-image: url('img/cuadrovidagoku.png');
         background-size: contain;
         position: absolute;
         left: 9px;
         top: 8px;
         background-repeat: no-repeat;
-    }    
-
+    }
+    #barraDeVidaGoku{
+        height: 31px;
+        width: 250px;
+        display: inline-block;
+        background-image: url('img/barravidagoku.png');
+        background-size: contain;
+        position: absolute;
+        left: 24px;
+        top: 6px;
+        background-repeat: no-repeat;
+    }
+    #cuadroDeVidaCell{
+        height: 60px;
+        width: 250px;
+        display: inline-block;
+        background-image: url('img/cuadrovidaminicell.png');
+        background-size: contain;
+        position: absolute;
+        left: 658px;
+        top: 8px;
+        background-repeat: no-repeat;
+    }
+    #barraDeVidaCell{
+        height: 31px;
+        width: 251px;
+        display: inline-block;
+        background-image: url('img/barravidaminicell.png');
+        background-size: contain;
+        position: absolute;
+        left: 6px;
+        top: 5px;
+        background-repeat: no-repeat;
+    }
+    .missile
+    {
+        position: absolute;
+        background-color: rgb(255, 77, 0);
+        width: 5px;
+        height: 10px;
+        padding: 3px;
+    }
+    #wall1
+    {
+        width: 700px;
+    }
+    #wall2
+    {
+        width: 700px;
+    }
     </style>
-</body>
+    <body>
+        <div id="wall2"></div>
+        <div id="world">
+            <div id="players">
+                <div class="player"></div>
+            </div>
+            <div id="enemies">
+                <div class="cell"></div>
+            </div>
+            <div id="cuadroDeVidaGoku">
+                <div id="barraDeVidaGoku"></div>
+            </div>
+            <div id="cuadroDeVidaCell">
+                <div id="barraDeVidaCell"></div>
+            </div>
+            <div id="missiles"></div>
+        </div>
+        <div id="wall1"></div>
+        <div id="wall3"></div>
+
+    </body>
+    
+    <script type="text/javascript">
+        
+        var player = {
+            left: 40,
+            top: 250
+        }
+
+var enemies = [
+  {left: 800, top: 250},
+]
+
+var missiles = []
+        function drawPlayer(){
+            content = "<div class='player' style='left:"+player.left+"px; top:"+player.top+"px'></div>";
+            document.getElementById("players").innerHTML = content;
+        }
+
+function drawEnemies() {
+  content = "";
+  for(var i=0; i<enemies.length; i++) {
+    content += "<div class='cell' style='left: "+enemies[i].left+"px; top: "+enemies[i].top+"px'></div>";
+  }
+  document.getElementById("enemies").innerHTML = content;
+}
+
+function drawMissiles() {
+  content = "";
+  for(var i=0; i<missiles.length; i++) {
+    content += "<div class='missile' style='left: "+missiles[i].left+"px; top: "+missiles[i].top+"px'></div>";
+  }
+  document.getElementById("missiles").innerHTML = content;
+}
+
+function moveEnemies() {
+  for(var i=0; i<enemies.length; i++) {
+      enemies[i].top+=4;
+      
+  }
+}
+
+function moveMissiles() {
+  for(var i=0; i<missiles.length; i++) {
+    missiles[i].left += 20 ;
+  }
+}
+
+        document.onkeydown = function(e) {
+            console.log(e);
+            if(e.keyCode == 37 && player.left > 10){ // left
+                player.left = player.left - 10;
+            }
+            if(e.keyCode == 39 && player.left < 840){ // right
+                player.left = player.left + 10;
+            }
+            if(e.keyCode == 38 && player.top > 8){ // UP
+                player.top = player.top - 10;
+            }
+            if(e.keyCode == 40 && player.top < 540){ // DOWN
+                player.top = player.top + 10;
+            }
+            if(e.keyCode == 32) {
+                missiles.push({left: player.left+51, top: player.top+55});
+                drawMissiles();
+            }
+            drawPlayer();
+        }
+
+function gameLoop() {
+  moveEnemies();
+  moveMissiles();
+  drawPlayer();
+  drawEnemies();
+  drawMissiles();
+  setTimeout(gameLoop, 50);
+}
+
+gameLoop();
+        </script>
 </html>
